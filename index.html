@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía de Turismo - Chile</title>
+    <meta name="description"
+        content="Guía completa de servicios turísticos: hoteles, restaurantes, supermercados, tiendas, transporte, actividades, eventos y más en Chile">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+    <!-- Hero Header -->
+    <header class="hero-header">
+        <div class="container">
+            <div class="header-content">
+                <h1 class="main-title">
+                    <span class="title-icon">🗺️</span>
+                    Guía de Turismo
+                </h1>
+                <p class="subtitle">Descubre los mejores servicios turísticos de Chile</p>
+
+                <!-- City Selector -->
+                <div class="city-selector">
+                    <label for="city-select" class="city-label">📍 Selecciona tu ciudad:</label>
+                    <select id="city-select" class="city-select">
+                        <option value="all">Todas las ciudades</option>
+                        <option value="villarrica" selected>Villarrica</option>
+                        <option value="santiago">Santiago</option>
+                        <option value="valparaiso">Valparaíso</option>
+                        <option value="vina-del-mar">Viña del Mar</option>
+                        <option value="concepcion">Concepción</option>
+                        <option value="pucon">Pucón</option>
+                        <option value="puerto-varas">Puerto Varas</option>
+                        <option value="la-serena">La Serena</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Category Tabs -->
+            <div class="category-tabs" id="category-tabs">
+                <button class="tab-btn active" data-category="hoteles">
+                    <span class="tab-icon">🏨</span>
+                    <span class="tab-label">Hoteles</span>
+                    <span class="tab-count" id="count-hoteles">0</span>
+                </button>
+                <button class="tab-btn" data-category="restaurantes">
+                    <span class="tab-icon">🍽️</span>
+                    <span class="tab-label">Restaurantes</span>
+                    <span class="tab-count" id="count-restaurantes">0</span>
+                </button>
+                <button class="tab-btn" data-category="supermercados">
+                    <span class="tab-icon">🛒</span>
+                    <span class="tab-label">Supermercados</span>
+                    <span class="tab-count" id="count-supermercados">0</span>
+                </button>
+                <button class="tab-btn" data-category="tiendas">
+                    <span class="tab-icon">🛍️</span>
+                    <span class="tab-label">Tiendas</span>
+                    <span class="tab-count" id="count-tiendas">0</span>
+                </button>
+                <button class="tab-btn" data-category="actividades">
+                    <span class="tab-icon">🎯</span>
+                    <span class="tab-label">Actividades</span>
+                    <span class="tab-count" id="count-actividades">0</span>
+                </button>
+                <button class="tab-btn" data-category="eventos">
+                    <span class="tab-icon">🎉</span>
+                    <span class="tab-label">Eventos</span>
+                    <span class="tab-count" id="count-eventos">0</span>
+                </button>
+                <button class="tab-btn" data-category="transporte">
+                    <span class="tab-icon">🚌</span>
+                    <span class="tab-label">Transporte</span>
+                    <span class="tab-count" id="count-transporte">0</span>
+                </button>
+                <button class="tab-btn" data-category="servicios">
+                    <span class="tab-icon">🛠️</span>
+                    <span class="tab-label">Servicios</span>
+                    <span class="tab-count" id="count-servicios">0</span>
+                </button>
+                <button class="tab-btn" data-category="atractivos">
+                    <span class="tab-icon">🎭</span>
+                    <span class="tab-label">Atractivos</span>
+                    <span class="tab-count" id="count-atractivos">0</span>
+                </button>
+                <button class="tab-btn" data-category="agencias">
+                    <span class="tab-icon">✈️</span>
+                    <span class="tab-label">Agencias</span>
+                    <span class="tab-count" id="count-agencias">0</span>
+                </button>
+            </div>
+
+            <!-- Action Bar -->
+            <div class="action-bar">
+                <button class="btn-primary" id="btn-add-service">
+                    <span class="btn-icon">➕</span>
+                    <span>Agregar Nuevo Servicio</span>
+                </button>
+                <div class="search-box">
+                    <input type="text" id="search-input" placeholder="Buscar servicios..." class="search-input">
+                    <span class="search-icon">🔍</span>
+                </div>
+            </div>
+
+            <!-- Services Grid -->
+            <div class="services-grid" id="services-grid">
+                <!-- Services will be dynamically inserted here -->
+            </div>
+
+            <!-- Empty State -->
+            <div class="empty-state" id="empty-state">
+                <div class="empty-icon">📋</div>
+                <h3>No hay servicios registrados</h3>
+                <p>Comienza agregando tu primer servicio usando el botón de arriba</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal for Adding/Editing Services -->
+    <div class="modal-overlay" id="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 id="modal-title">Agregar Nuevo Servicio</h2>
+                <button class="modal-close" id="modal-close">&times;</button>
+            </div>
+            <form class="modal-form" id="service-form">
+                <div class="form-group">
+                    <label for="service-category">Categoría</label>
+                    <select id="service-category" required>
+                        <option value="">Selecciona una categoría</option>
+                        <option value="hoteles">🏨 Hoteles</option>
+                        <option value="restaurantes">🍽️ Restaurantes</option>
+                        <option value="supermercados">🛒 Supermercados</option>
+                        <option value="tiendas">🛍️ Tiendas</option>
+                        <option value="actividades">🎯 Actividades</option>
+                        <option value="eventos">🎉 Eventos</option>
+                        <option value="transporte">🚌 Transporte</option>
+                        <option value="servicios">🛠️ Servicios</option>
+                        <option value="atractivos">🎭 Atractivos Turísticos</option>
+                        <option value="agencias">✈️ Agencias de Viaje</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="service-city">Ciudad</label>
+                    <select id="service-city" required>
+                        <option value="">Selecciona una ciudad</option>
+                        <option value="villarrica">Villarrica</option>
+                        <option value="santiago">Santiago</option>
+                        <option value="valparaiso">Valparaíso</option>
+                        <option value="vina-del-mar">Viña del Mar</option>
+                        <option value="concepcion">Concepción</option>
+                        <option value="pucon">Pucón</option>
+                        <option value="puerto-varas">Puerto Varas</option>
+                        <option value="la-serena">La Serena</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="service-name">Nombre del Servicio</label>
+                    <input type="text" id="service-name" required placeholder="Ej: Hotel Plaza">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="service-address">Dirección</label>
+                        <input type="text" id="service-address" required placeholder="Calle Principal 123">
+                    </div>
+                    <div class="form-group">
+                        <label for="service-phone">Teléfono</label>
+                        <input type="tel" id="service-phone" placeholder="+56 9 1234 5678">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="service-email">Email</label>
+                    <input type="email" id="service-email" placeholder="contacto@ejemplo.com">
+                </div>
+
+                <div class="form-group">
+                    <label for="service-website">Sitio Web</label>
+                    <input type="url" id="service-website" placeholder="https://www.ejemplo.com">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="service-rating">Calificación</label>
+                        <select id="service-rating">
+                            <option value="5">⭐⭐⭐⭐⭐ (5 estrellas)</option>
+                            <option value="4">⭐⭐⭐⭐ (4 estrellas)</option>
+                            <option value="3" selected>⭐⭐⭐ (3 estrellas)</option>
+                            <option value="2">⭐⭐ (2 estrellas)</option>
+                            <option value="1">⭐ (1 estrella)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="service-price">Rango de Precio</label>
+                        <select id="service-price">
+                            <option value="$">$ (Económico)</option>
+                            <option value="$$" selected>$$ (Moderado)</option>
+                            <option value="$$$">$$$ (Caro)</option>
+                            <option value="$$$$">$$$$ (Muy Caro)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="service-description">Descripción</label>
+                    <textarea id="service-description" rows="4"
+                        placeholder="Describe el servicio, sus características principales..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="service-tags">Etiquetas (separadas por comas)</label>
+                    <input type="text" id="service-tags" placeholder="wifi, estacionamiento, desayuno incluido">
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" id="btn-cancel">Cancelar</button>
+                    <button type="submit" class="btn-primary">
+                        <span id="btn-submit-text">Guardar Servicio</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Detail Modal -->
+    <div class="modal-overlay" id="detail-modal-overlay">
+        <div class="modal modal-detail">
+            <div class="modal-header">
+                <h2 id="detail-title"></h2>
+                <button class="modal-close" id="detail-modal-close">&times;</button>
+            </div>
+            <div class="detail-content" id="detail-content">
+                <!-- Details will be dynamically inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
