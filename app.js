@@ -1870,9 +1870,9 @@ class ServiceManager {
 
         if (services.length === 0) {
             grid.innerHTML = '';
-            emptyState.classList.add('show');
+            emptyState.style.display = 'block';
         } else {
-            emptyState.classList.remove('show');
+            emptyState.style.display = 'none';
             grid.innerHTML = services.map((service, index) => this.createServiceCard(service, index)).join('');
         }
     }
@@ -1885,10 +1885,11 @@ class ServiceManager {
         ).join('');
 
         return `
-            <div class="service-card" style="animation-delay: ${index * 0.1}s; cursor: pointer;" data-service-id="${service.id}" onclick="serviceManager.viewServiceDetails('${service.id}')">
-                <div class="service-header">
-                    <div>
-                        <div class="service-icon">${icon}</div>
+            <div class="service-card collapsed" style="animation-delay: ${index * 0.1}s;" data-service-id="${service.id}" onclick="serviceManager.toggleServiceCard(this, '${service.id}')">
+                <!-- Contenido siempre visible (Vista compacta) -->
+                <div class="service-card-header">
+                    <div class="service-icon">${icon}</div>
+                    <div class="service-header-info">
                         <h3 class="service-name">${this.escapeHtml(service.name)}</h3>
                         <span class="service-category-badge">${this.getCategoryName(service.category)}</span>
                     </div>
@@ -1898,48 +1899,70 @@ class ServiceManager {
                     <span class="stars">${stars}</span>
                     <span class="price-range">${service.price}</span>
                 </div>
-                
-                <div class="service-info">
-                    ${service.address ? `
-                        <div class="service-info-item">
-                            📍 ${this.escapeHtml(service.address)}
-                        </div>
-                    ` : ''}
-                    ${service.phone ? `
-                        <div class="service-info-item">
-                            📞 ${this.escapeHtml(service.phone)}
-                        </div>
-                    ` : ''}
-                    ${service.email ? `
-                        <div class="service-info-item">
-                            ✉️ ${this.escapeHtml(service.email)}
-                        </div>
-                    ` : ''}
-                </div>
-                
-                ${service.description ? `
-                    <p class="service-description">${this.escapeHtml(service.description)}</p>
-                ` : ''}
-                
-                ${service.tags.length > 0 ? `
-                    <div class="service-tags">
-                        ${tags}
+
+                <!-- Contenido que se expande (Vista detallada) -->
+                <div class="service-details-expandable">
+                    <div class="service-info">
+                        ${service.address ? `
+                            <div class="service-info-item">
+                                📍 ${this.escapeHtml(service.address)}
+                            </div>
+                        ` : ''}
+                        ${service.phone ? `
+                            <div class="service-info-item">
+                                📞 ${this.escapeHtml(service.phone)}
+                            </div>
+                        ` : ''}
+                        ${service.email ? `
+                            <div class="service-info-item">
+                                ✉️ ${this.escapeHtml(service.email)}
+                            </div>
+                        ` : ''}
                     </div>
-                ` : ''}
-                
-                <div class="service-actions" onclick="event.stopPropagation()">
-                    <button class="btn-icon-only" onclick="serviceManager.viewServiceDetails('${service.id}')" title="Ver detalles">
-                        👁️
-                    </button>
-                    <button class="btn-icon-only" onclick="serviceManager.editService('${service.id}')" title="Editar">
-                        ✏️
-                    </button>
-                    <button class="btn-icon-only delete" onclick="serviceManager.deleteService('${service.id}')" title="Eliminar">
-                        🗑️
-                    </button>
+                    
+                    ${service.description ? `
+                        <p class="service-description">${this.escapeHtml(service.description)}</p>
+                    ` : ''}
+                    
+                    ${service.tags.length > 0 ? `
+                        <div class="service-tags">
+                            ${tags}
+                        </div>
+                    ` : ''}
+                    
+                    <div class="service-actions" onclick="event.stopPropagation()">
+                        <button class="btn-icon-only" onclick="serviceManager.viewServiceDetails('${service.id}')" title="Ver detalles completos">
+                            👁️
+                        </button>
+                        <button class="btn-icon-only" onclick="serviceManager.editService('${service.id}')" title="Editar">
+                            ✏️
+                        </button>
+                        <button class="btn-icon-only delete" onclick="serviceManager.deleteService('${service.id}')" title="Eliminar">
+                            🗑️
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Indicador de expansión -->
+                <div class="expand-indicator">
+                    <span class="expand-icon">▼</span>
+                    <span class="expand-text">Click para ver más</span>
                 </div>
             </div>
         `;
+    }
+
+    toggleServiceCard(cardElement, serviceId) {
+        const isCollapsed = cardElement.classList.contains('collapsed');
+
+        if (isCollapsed) {
+            // Primer clic: Expandir la tarjeta
+            cardElement.classList.remove('collapsed');
+            cardElement.classList.add('expanded');
+        } else {
+            // Segundo clic: Abrir modal
+            this.viewServiceDetails(serviceId);
+        }
     }
 
     getCategoryIcon(category) {
@@ -2102,13 +2125,13 @@ class ServiceManager {
             }
         }
 
-        overlay.classList.add('show');
+        overlay.classList.add('active');
         document.body.style.overflow = 'hidden';
     }
 
     closeModal() {
         const overlay = document.getElementById('modal-overlay');
-        overlay.classList.remove('show');
+        overlay.classList.remove('active');
         document.body.style.overflow = '';
         this.editingServiceId = null;
         document.getElementById('service-form').reset();
@@ -2282,7 +2305,7 @@ class ServiceManager {
 
     closeDetailModal() {
         const overlay = document.getElementById('detail-modal-overlay');
-        overlay.classList.remove('show');
+        overlay.classList.remove('active');
         document.body.style.overflow = '';
     }
 
